@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>筋トレ記録アプリ</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>筋トレ記録アプリ</h1>
+  </header>
+
+  <main>
+    <!-- 記録入力 -->
+    <section class="card">
+      <h2>記録する</h2>
+      <form id="record-form">
+        <label>
+          日付
+          <input type="date" id="date" required>
+        </label>
+        <label>
+          種目
+          <input type="text" id="exercise" list="exercise-list" placeholder="例: ベンチプレス" required>
+          <datalist id="exercise-list"></datalist>
+        </label>
+        <div class="row">
+          <label>
+            重量 (kg)
+            <input type="number" id="weight" min="0" step="0.5" placeholder="60" required>
+          </label>
+          <label>
+            Rep数
+            <input type="number" id="reps" min="1" step="1" placeholder="10" required>
+          </label>
+        </div>
+        <label>
+          メモ
+          <textarea id="memo" rows="2" placeholder="フォーム、調子など自由に"></textarea>
+        </label>
+        <button type="submit">保存</button>
+      </form>
+    </section>
+
+    <!-- グラフ -->
+    <section class="card">
+      <h2>グラフ（日付 − Rep数）</h2>
+      <div class="row">
+        <label>
+          種目
+          <select id="graph-exercise"></select>
+        </label>
+        <label>
+          重量 (kg)
+          <select id="graph-weight"></select>
+        </label>
+      </div>
+      <p id="graph-empty" class="empty">記録がありません</p>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+    </section>
+
+    <!-- 履歴 -->
+    <section class="card">
+      <h2>履歴</h2>
+      <p id="history-empty" class="empty">記録がありません</p>
+      <ul id="history"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
