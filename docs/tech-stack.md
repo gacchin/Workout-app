@@ -72,9 +72,10 @@ WebApp/
 
 | 処理 | 関数 |
 |---|---|
-| データの読み込み・保存 | `loadRecords()` / `saveRecords()` |
+| データの読み込み・保存 | `loadRecords()` / `saveRecords()` / `loadExercises()` / `saveExercises()` |
+| 登録済み種目の管理 | 種目登録フォーム / `renderRegisteredExercises()` |
 | 記録の入力 | フォームの `submit` イベント |
-| 種目の入力候補の作成 | `renderExerciseList()` |
+| 種目の入力候補の作成 | `renderExerciseList()`（登録済み種目と過去の記録から作成） |
 | グラフの種目・重量の選択欄の作成 | `renderGraphSelectors()` / `renderWeightSelector()` |
 | グラフの描画 | `renderChart()` |
 | 履歴の表示・削除 | `renderHistory()` |
@@ -90,8 +91,8 @@ WebApp/
 ### 4.5 localStorage
 ブラウザに付いているデータの保存領域です。
 
-- 保存キー: `workout-records`
-- 保存形式: 記録の配列を JSON 文字列にしたもの（項目は [仕様書](specification.md) の「データ項目」を参照）
+- 保存キー: `workout-records`（記録）、`workout-exercises`（登録済み種目）
+- 保存形式: 配列を JSON 文字列にしたもの（記録の項目は [仕様書](specification.md) の「データ項目」を参照）
 
 ## 5. 処理の流れ（記録を保存するとき）
 
