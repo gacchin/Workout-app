@@ -127,6 +127,25 @@ button:hover {
   border-bottom: none;
 }
 
+#registered-exercises {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+#registered-exercises li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+#registered-exercises li:last-child {
+  border-bottom: none;
+}
+
 .history-main {
   font-weight: bold;
 }

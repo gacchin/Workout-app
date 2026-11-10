@@ -1,6 +1,10 @@
 // 記録はブラウザの localStorage に保存する
 const STORAGE_KEY = "workout-records";
+const EXERCISE_STORAGE_KEY = "workout-exercises";
 
+const exerciseForm = document.getElementById("exercise-form");
+const newExerciseInput = document.getElementById("new-exercise");
+const registeredExerciseList = document.getElementById("registered-exercises");
 const form = document.getElementById("record-form");
 const dateInput = document.getElementById("date");
 const exerciseInput = document.getElementById("exercise");
@@ -15,6 +19,7 @@ const historyList = document.getElementById("history");
 const historyEmpty = document.getElementById("history-empty");
 
 let records = loadRecords();
+let registeredExercises = loadExercises();
 let chart = null;
 
 function loadRecords() {
@@ -25,8 +30,23 @@ function loadRecords() {
   }
 }
 
+function loadExercises() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(EXERCISE_STORAGE_KEY)) || [];
+    return Array.isArray(saved)
+      ? uniqueSorted(saved.filter((name) => typeof name === "string").map((name) => name.trim()).filter(Boolean))
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function saveRecords() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function saveExercises() {
+  localStorage.setItem(EXERCISE_STORAGE_KEY, JSON.stringify(registeredExercises));
 }
 
 function today() {
@@ -37,6 +57,43 @@ function today() {
 
 function uniqueSorted(values, compare) {
   return [...new Set(values)].sort(compare);
+}
+
+// ---- 種目登録 ----
+exerciseForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = newExerciseInput.value.trim();
+  if (!name || registeredExercises.includes(name)) return;
+
+  registeredExercises.push(name);
+  registeredExercises = uniqueSorted(registeredExercises);
+  saveExercises();
+  newExerciseInput.value = "";
+  renderExerciseList();
+  renderRegisteredExercises();
+});
+
+function renderRegisteredExercises() {
+  registeredExerciseList.innerHTML = "";
+  for (const name of registeredExercises) {
+    const li = document.createElement("li");
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "delete-btn";
+    del.textContent = "削除";
+    del.addEventListener("click", () => {
+      registeredExercises = registeredExercises.filter((exercise) => exercise !== name);
+      saveExercises();
+      renderExerciseList();
+      renderRegisteredExercises();
+    });
+
+    li.append(label, del);
+    registeredExerciseList.appendChild(li);
+  }
 }
 
 // ---- 入力 ----
@@ -62,7 +119,7 @@ form.addEventListener("submit", (e) => {
 
 // ---- 種目の候補 ----
 function renderExerciseList() {
-  const exercises = uniqueSorted(records.map((r) => r.exercise));
+  const exercises = uniqueSorted([...registeredExercises, ...records.map((r) => r.exercise)]);
   exerciseList.innerHTML = "";
   for (const name of exercises) {
     const option = document.createElement("option");
@@ -187,6 +244,7 @@ function renderHistory() {
 // ---- 全体の再描画 ----
 function render(preferExercise, preferWeight) {
   renderExerciseList();
+  renderRegisteredExercises();
   renderGraphSelectors(preferExercise, preferWeight);
   renderChart();
   renderHistory();
